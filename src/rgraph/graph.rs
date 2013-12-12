@@ -20,15 +20,15 @@ pub struct Vertex<K, L, V> {
 
 /// Iterator to iterate easily other all the vertex of a Graph.
 #[deriving(Clone)]
-pub struct VertexIterator<'self, K, L, V> {
-    priv head: &'self Option<~Vertex<K, L, V>>,
+pub struct VertexIterator<'s, K, L, V> {
+    priv head: &'s Option<~Vertex<K, L, V>>,
 }
 
-impl<'self, 
+impl<'s, 
      K: ToStr + Ord + Eq + Clone,
      L: ToStr + Ord + Eq + Clone,
      V: ToStr + Ord + Eq + Clone> 
-     Iterator<(&'self K, Option<&'self L>)> for VertexIterator<'self, K, L, V> {
+     Iterator<(&'s K, Option<&'s L>)> for VertexIterator<'s, K, L, V> {
     
     /**
     * Get the next iterator of the Vertex list.
@@ -37,11 +37,11 @@ impl<'self,
     * Return an Option containing a tuple with the key of the Vertex and it value or None.
     */
     #[inline]
-    fn next(&mut self) -> Option<(&'self K, Option<&'self L>)> {
-        do self.head.as_ref().map |head| {
+    fn next(&mut self) -> Option<(&'s K, Option<&'s L>)> {
+        self.head.as_ref().map( |head| {
             self.head = &head.next;
             (&head.key, Some(head.label.get_ref()))
-        }
+        })
     }
 }
 
@@ -457,14 +457,14 @@ pub struct Edge<K, V> {
 
 /// An Iterator to iterate othe the Edge of a Vertex
 #[deriving(Clone)]
-pub struct EdgeIterator<'self, K, V> {
-    priv head: &'self Option<~Edge<K, V>>,
+pub struct EdgeIterator<'s, K, V> {
+    priv head: &'s Option<~Edge<K, V>>,
 }
 
-impl<'self, 
+impl<'s, 
      K: ToStr + Ord + Eq + Clone,
      V: ToStr + Ord + Eq + Clone> 
-     Iterator<(&'self K, Option<&'self V>)> for EdgeIterator<'self, K, V> {
+     Iterator<(&'s K, Option<&'s V>)> for EdgeIterator<'s, K, V> {
     
     /**
     * Get the next iterator of the Edge.
@@ -473,11 +473,11 @@ impl<'self,
     * Return an Option containing a tuple with the key of the Vertex and it cost or None.
     */
     #[inline]
-    fn next(&mut self) -> Option<(&'self K, Option<&'self V>)> {
-        do self.head.as_ref().map |head| {
+    fn next(&mut self) -> Option<(&'s K, Option<&'s V>)> {
+        self.head.as_ref().map( |head| {
             self.head = &head.next;
             (&head.to_key, Some(head.value.get_ref()))
-        }
+        })
     }
 }
 

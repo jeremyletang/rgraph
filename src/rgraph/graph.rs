@@ -1094,6 +1094,8 @@ impl<K: ToStr + Ord + Eq + Clone,
      Mutable for Graph<K, L, V> {
     /// Clear the Graph, removing all Vertices and edges
     fn clear(&mut self) {
+        self.vertices = None;
+        self.len = 0;
     }
 }
 

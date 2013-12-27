@@ -5,13 +5,7 @@
 //!
 //!
 
-#[link(name = "rgraph",
-       vers = "0.0.1",
-       package_id = "rgraph",
-       author = "letang.jeremy@gmail.com",
-       uuid = "82D2FA35-9631-4CB7-8B25-201E83EB7CB3",
-       url = "http://https://github.com/JeremyLetang/rgraph")];
-
+#[crate_id = "rgraph#0.1"];
 #[desc = "Graph library in Rust"];
 #[license = "MIT"];
 #[crate_type = "lib"];

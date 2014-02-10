@@ -19,7 +19,7 @@ pub struct Vertex<K, L, V> {
 }
 
 /// Iterator to iterate easily other all the vertex of a Graph.
-#[deriving(Clone)]
+// #[deriving(Clone)]
 pub struct VertexIterator<'s, K, L, V> {
     priv head: &'s Option<~Vertex<K, L, V>>,
 }
@@ -456,7 +456,7 @@ pub struct Edge<K, V> {
 }
 
 /// An Iterator to iterate othe the Edge of a Vertex
-#[deriving(Clone)]
+// #[deriving(Clone)]
 pub struct EdgeIterator<'s, K, V> {
     priv head: &'s Option<~Edge<K, V>>,
 }

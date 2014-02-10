@@ -16,6 +16,7 @@
 // #[warn(missing_doc)];
 
 extern mod extra;
+extern mod serialize;
 
 // public reexports
 pub use graph::Graph;
@@ -23,6 +24,6 @@ pub use graph::{Vertex, VertexIterator};
 pub use graph::{Edge, EdgeIterator};
 
 // mods
-pub mod graph;
+mod graph;
 // pub mod graphviz;
 // pub mod graphml;

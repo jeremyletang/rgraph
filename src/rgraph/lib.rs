@@ -15,8 +15,8 @@
 #[deny(unnecessary_qualification)];
 // #[warn(missing_doc)];
 
-extern mod extra;
-extern mod serialize;
+extern crate extra;
+extern crate serialize;
 
 // public reexports
 pub use graph::Graph;

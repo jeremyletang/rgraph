@@ -102,7 +102,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     * A new Vertex.
     */
     pub fn new_with_edges(key: K,
-                          mut edges: ~[Box<Edge<K, V>>])
+                          mut edges: Vec<Box<Edge<K, V>>>)
                           -> Vertex<K, L, V> {
         let tmp_edges: Option<Box<Edge<K, V>>> = edges.shift();
         let mut vertex = Vertex {
@@ -151,7 +151,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     */
     pub fn new_with_label_edges(key: K,
                                 label: L,
-                                mut edges: ~[Box<Edge<K, V>>])
+                                mut edges: Vec<Box<Edge<K, V>>>)
                                 -> Vertex<K, L, V> {
         let tmp_edges: Option<Box<Edge<K, V>>> = edges.shift();
         let mut vertex = Vertex {
@@ -593,7 +593,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     * # Return
     * A new graph with initialized with vertices.
     */
-    pub fn new_with_vertices(mut vertices: ~[Box<Vertex<K, L, V>>]) -> Graph<K, L, V> {
+    pub fn new_with_vertices(mut vertices: Vec<Box<Vertex<K, L, V>>>) -> Graph<K, L, V> {
         let tmp_vertice: Option<Box<Vertex<K, L, V>>> = vertices.shift();
         let mut graph = Graph {
             vertices:   tmp_vertice,

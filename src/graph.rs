@@ -14,14 +14,14 @@ use std::iter::Iterator;
 pub struct Vertex<K, L, V> {
     key:                   K,
     label:                 Option<L>,
-    edges:                 Option<~Edge<K, V>>,
-    next:                  Option<~Vertex<K, L, V>>,
+    edges:                 Option<Box<Edge<K, V>>>,
+    next:                  Option<Box<Vertex<K, L, V>>>,
 }
 
 /// Iterator to iterate easily other all the vertex of a Graph.
 // #[deriving(Clone)]
 pub struct VertexIterator<'s, K, L, V> {
-    head: &'s Option<~Vertex<K, L, V>>,
+    head: &'s Option<Box<Vertex<K, L, V>>>,
 }
 
 impl<'s,
@@ -102,9 +102,9 @@ impl<K: ToStr + Ord + Eq + Clone,
     * A new Vertex.
     */
     pub fn new_with_edges(key: K,
-                          mut edges: ~[~Edge<K, V>])
+                          mut edges: ~[Box<Edge<K, V>>])
                           -> Vertex<K, L, V> {
-        let tmp_edges: Option<~Edge<K, V>> = edges.shift();
+        let tmp_edges: Option<Box<Edge<K, V>>> = edges.shift();
         let mut vertex = Vertex {
             key:    key,
             label:  None,
@@ -151,9 +151,9 @@ impl<K: ToStr + Ord + Eq + Clone,
     */
     pub fn new_with_label_edges(key: K,
                                 label: L,
-                                mut edges: ~[~Edge<K, V>])
+                                mut edges: ~[Box<Edge<K, V>>])
                                 -> Vertex<K, L, V> {
-        let tmp_edges: Option<~Edge<K, V>> = edges.shift();
+        let tmp_edges: Option<Box<Edge<K, V>>> = edges.shift();
         let mut vertex = Vertex {
             key:    key,
             label:  Some(label),
@@ -243,10 +243,10 @@ impl<K: ToStr + Ord + Eq + Clone,
         if !self.edge_exist(&to_key) {
             match value {
                 Some(v) => VertexUtils::add_edge(&mut self.edges,
-                                                 ~Edge::new_with_value(to_key,
+                                                 box Edge::new_with_value(to_key,
                                                                        v)),
                 None    => VertexUtils::add_edge(&mut self.edges,
-                                                 ~Edge::new(to_key))
+                                                 box Edge::new(to_key))
             }
             true
         } else {
@@ -270,7 +270,7 @@ impl<K: ToStr + Ord + Eq + Clone,
                       -> bool {
         if !self.edge_exist(&to_key) {
             VertexUtils::add_edge(&mut self.edges,
-                                  ~Edge::new_with_value(to_key, value));
+                                  box Edge::new_with_value(to_key, value));
             true
         } else {
             false
@@ -290,7 +290,7 @@ impl<K: ToStr + Ord + Eq + Clone,
                     to_key: K)
                     -> bool {
         if !self.edge_exist(&to_key) {
-            VertexUtils::add_edge(&mut self.edges, ~Edge::new(to_key));
+            VertexUtils::add_edge(&mut self.edges, box Edge::new(to_key));
             true
         } else {
             false
@@ -386,7 +386,7 @@ impl<K: ToStr + Ord + Eq + Clone,
 mod VertexUtils {
     use super::{Edge};
 
-    pub fn update_edge_value<K: Eq, V>(edge: &mut Option<~Edge<K, V>>,
+    pub fn update_edge_value<K: Eq, V>(edge: &mut Option<Box<Edge<K, V>>>,
                                        value: Option<V>,
                                        to_key: K) -> () {
         match *edge {
@@ -401,7 +401,7 @@ mod VertexUtils {
         }
     }
 
-    pub fn remove_edge<K: Eq, V>(edge: &mut Option<~Edge<K, V>>,
+    pub fn remove_edge<K: Eq, V>(edge: &mut Option<Box<Edge<K, V>>>,
                                  to_key: K) {
         match *edge {
             Some(ref mut e) => {
@@ -420,9 +420,9 @@ mod VertexUtils {
         }
     }
 
-    pub fn get_edge_imm<'r, K: Eq, V>(edge: &'r Option<~Edge<K, V>>,
+    pub fn get_edge_imm<'r, K: Eq, V>(edge: &'r Option<Box<Edge<K, V>>>,
                                       to_key: &K)
-                                      -> Option<&'r ~Edge<K, V>> {
+                                      -> Option<&'r Box<Edge<K, V>>> {
         match *edge {
             Some(ref e) => {
                 if e.to_key == *to_key {
@@ -437,8 +437,8 @@ mod VertexUtils {
 
     pub fn add_edge<K: ToStr + Ord + Eq + Clone,
                     V: ToStr + Ord + Eq + Clone>
-                    (edge: &mut Option<~Edge<K, V>>,
-                    new_edge: ~Edge<K, V>) {
+                    (edge: &mut Option<Box<Edge<K, V>>>,
+                    new_edge: Box<Edge<K, V>>) {
         match *edge {
             Some(ref mut e) => add_edge(&mut e.next, new_edge),
             None => {*edge = Some(new_edge)}
@@ -457,13 +457,13 @@ mod VertexUtils {
 pub struct Edge<K, V> {
     value:             Option<V>,
     to_key:            K,
-    next:              Option<~Edge<K, V>>
+    next:              Option<Box<Edge<K, V>>>
 }
 
 /// An Iterator to iterate othe the Edge of a Vertex
 // #[deriving(Clone)]
 pub struct EdgeIterator<'s, K, V> {
-    head: &'s Option<~Edge<K, V>>,
+    head: &'s Option<Box<Edge<K, V>>>,
 }
 
 impl<'s,
@@ -558,7 +558,7 @@ impl<K: ToStr + Ord + Eq + Clone,
 */
 #[deriving(Clone, Eq, Encodable, Decodable)]
 pub struct Graph<K, L, V> {
-    vertices:      Option<~Vertex<K, L, V>>,
+    vertices:      Option<Box<Vertex<K, L, V>>>,
     len:           uint,
     directed:      bool
 }
@@ -593,8 +593,8 @@ impl<K: ToStr + Ord + Eq + Clone,
     * # Return
     * A new graph with initialized with vertices.
     */
-    pub fn new_with_vertices(mut vertices: ~[~Vertex<K, L, V>]) -> Graph<K, L, V> {
-        let tmp_vertice: Option<~Vertex<K, L, V>> = vertices.shift();
+    pub fn new_with_vertices(mut vertices: ~[Box<Vertex<K, L, V>>]) -> Graph<K, L, V> {
+        let tmp_vertice: Option<Box<Vertex<K, L, V>>> = vertices.shift();
         let mut graph = Graph {
             vertices:   tmp_vertice,
             len:        0,
@@ -635,10 +635,10 @@ impl<K: ToStr + Ord + Eq + Clone,
         if !self.vertex_exist(&key) {
             match label {
                 Some(l) => GraphUtils::add_vertex(&mut self.vertices,
-                                                  ~Vertex::new_with_label(key,
+                                                  box Vertex::new_with_label(key,
                                                                           l)),
                 None    => GraphUtils::add_vertex(&mut self.vertices,
-                                                  ~Vertex::new(key))
+                                                  box Vertex::new(key))
             }
             self.len += 1;
             true
@@ -665,7 +665,7 @@ impl<K: ToStr + Ord + Eq + Clone,
                             -> bool {
         if !self.vertex_exist(&key) {
             GraphUtils::add_vertex(&mut self.vertices,
-                                   ~Vertex::new_with_label(key, label));
+                                   box Vertex::new_with_label(key, label));
             self.len += 1;
             true
         } else {
@@ -688,7 +688,7 @@ impl<K: ToStr + Ord + Eq + Clone,
                       key: K)
                       -> bool {
         if !self.vertex_exist(&key) {
-            GraphUtils::add_vertex(&mut self.vertices, ~Vertex::new(key));
+            GraphUtils::add_vertex(&mut self.vertices, box Vertex::new(key));
             self.len += 1;
             true
         } else {
@@ -707,7 +707,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     */
     pub fn get_vertex<'r>(&'r self,
                           vertex_key: K)
-                          -> Option<&'r ~Vertex<K, L, V>> {
+                          -> Option<&'r Box<Vertex<K, L, V>>> {
         GraphUtils::get_vertex_imm(&self.vertices, &vertex_key)
     }
 
@@ -729,7 +729,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     */
     pub fn get_vertex_mut<'r>(&'r mut self,
                               vertex_key: K)
-                              -> Option<&'r mut ~Vertex<K, L, V>> {
+                              -> Option<&'r mut Box<Vertex<K, L, V>>> {
         GraphUtils::get_vertex_mut(&mut self.vertices, vertex_key)
     }
 
@@ -1128,7 +1128,7 @@ impl<K: ToStr + Ord + Eq + Clone,
 mod GraphUtils {
     use super::{Vertex};
 
-    pub fn remove_vertex<K: Eq, L, V>(vertex: &mut Option<~Vertex<K, L, V>>,
+    pub fn remove_vertex<K: Eq, L, V>(vertex: &mut Option<Box<Vertex<K, L, V>>>,
                                       key: K) -> () {
         match *vertex {
             Some(ref mut v) => {
@@ -1150,7 +1150,7 @@ mod GraphUtils {
     pub fn remove_edge_to<K: ToStr + Ord + Eq + Clone,
                           L: ToStr + Ord + Eq + Clone,
                           V: ToStr + Ord + Eq + Clone>
-                          (vertex: &mut Option<~Vertex<K, L, V>>, key: K) -> () {
+                          (vertex: &mut Option<Box<Vertex<K, L, V>>>, key: K) -> () {
         match *vertex {
             Some(ref mut v) => {
                 if v.edge_exist(&key) {
@@ -1162,8 +1162,8 @@ mod GraphUtils {
         }
     }
 
-    pub fn get_vertex_mut<'r, K: Eq, L, V>(vertex: &'r mut Option<~Vertex<K, L, V>>, 
-                                           key: K) -> Option<&'r mut ~Vertex<K, L, V>> {
+    pub fn get_vertex_mut<'r, K: Eq, L, V>(vertex: &'r mut Option<Box<Vertex<K, L, V>>>,
+                                           key: K) -> Option<&'r mut Box<Vertex<K, L, V>>> {
         match *vertex {
             Some(ref mut v) => {
                 if v.key == key {
@@ -1176,8 +1176,8 @@ mod GraphUtils {
         }
     }
 
-    pub fn get_vertex_imm<'r, K: Eq, L, V>(vertex: &'r Option<~Vertex<K, L, V>>, 
-                                           key: &K) -> Option<&'r ~Vertex<K, L, V>> {
+    pub fn get_vertex_imm<'r, K: Eq, L, V>(vertex: &'r Option<Box<Vertex<K, L, V>>>,
+                                           key: &K) -> Option<&'r Box<Vertex<K, L, V>>> {
         match *vertex {
             Some(ref v) => {
                 if v.key == *key {
@@ -1190,7 +1190,7 @@ mod GraphUtils {
         }
     }
 
-    pub fn update_vertex_label<K: Eq, L, V>(vertex: &mut Option<~Vertex<K, L, V>>, 
+    pub fn update_vertex_label<K: Eq, L, V>(vertex: &mut Option<Box<Vertex<K, L, V>>>,
                                             label: Option<L>,
                                             key: K) -> () {
         match *vertex {
@@ -1208,8 +1208,8 @@ mod GraphUtils {
     pub fn add_vertex<K: ToStr + Ord + Eq + Clone,
                       L: ToStr + Ord + Eq + Clone,
                       V: ToStr + Ord + Eq + Clone>
-                      (vertex: &mut Option<~Vertex<K, L, V>>,
-                      new_vertex: ~Vertex<K, L, V>) -> () {
+                      (vertex: &mut Option<Box<Vertex<K, L, V>>>,
+                      new_vertex: Box<Vertex<K, L, V>>) -> () {
         match *vertex {
             Some(ref mut v) => add_vertex(&mut v.next, new_vertex),
             None            => *vertex = Some(new_vertex)

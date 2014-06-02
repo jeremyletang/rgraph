@@ -10,7 +10,7 @@ use std::iter::Iterator;
 * * L - The Vertex's Label type
 * * V - The Edge's Value type
 */
-#[deriving(Clone, Eq, Encodable, Decodable)]
+#[deriving(Clone, PartialEq, Encodable, Decodable)]
 pub struct Vertex<K, L, V> {
     key:                   K,
     label:                 Option<L>,
@@ -453,7 +453,7 @@ mod VertexUtils {
 * * K - The Vertex's Key type
 * * V - The Edge's Value type
 */
-#[deriving(Clone, Eq, Encodable, Decodable)]
+#[deriving(Clone, PartialEq, Encodable, Decodable)]
 pub struct Edge<K, V> {
     value:             Option<V>,
     to_key:            K,
@@ -556,7 +556,7 @@ impl<K: ToStr + Ord + Eq + Clone,
 * * L - The Vertex's Label type
 * * V - The Edge's Value type
 */
-#[deriving(Clone, Eq, Encodable, Decodable)]
+#[deriving(Clone, PartialEq, Encodable, Decodable)]
 pub struct Graph<K, L, V> {
     vertices:      Option<Box<Vertex<K, L, V>>>,
     len:           uint,

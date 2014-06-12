@@ -1104,7 +1104,7 @@ impl<K: ToStr + Ord + Eq + Clone,
     }
 }
 
-impl<K, L, V> Container for Graph<K, L, V> {
+impl<K, L, V> Collection for Graph<K, L, V> {
     fn len(&self) -> uint {
         self.len
     }

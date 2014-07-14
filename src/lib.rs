@@ -1,11 +1,8 @@
 //! Graph library for Rust
 //!
 //! Provide an abstract Graph library and graph file output
-//!
-//!
-//!
 
-#![crate_id = "rgraph#0.1"]
+#![crate_name = "rgraph"]
 #![desc = "Graph library in Rust"]
 #![license = "MIT"]
 #![crate_type = "lib"]

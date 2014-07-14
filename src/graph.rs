@@ -25,9 +25,9 @@ pub struct VertexIterator<'s, K, L, V> {
 }
 
 impl<'s,
-     K: ToStr + Ord + Eq + Clone,
-     L: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+     K: ToString + Ord + Eq + Clone,
+     L: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Iterator<(&'s K, Option<&'s L>)> for VertexIterator<'s, K, L, V> {
 
     /**
@@ -45,9 +45,9 @@ impl<'s,
     }
 }
 
-impl<K: ToStr + Ord + Eq + Clone,
-     L: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+impl<K: ToString + Ord + Eq + Clone,
+     L: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Vertex<K, L, V> {
 
     /**
@@ -435,8 +435,8 @@ mod VertexUtils {
         }
     }
 
-    pub fn add_edge<K: ToStr + Ord + Eq + Clone,
-                    V: ToStr + Ord + Eq + Clone>
+    pub fn add_edge<K: ToString + Ord + Eq + Clone,
+                    V: ToString + Ord + Eq + Clone>
                     (edge: &mut Option<Box<Edge<K, V>>>,
                     new_edge: Box<Edge<K, V>>) {
         match *edge {
@@ -467,8 +467,8 @@ pub struct EdgeIterator<'s, K, V> {
 }
 
 impl<'s,
-     K: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+     K: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Iterator<(&'s K, Option<&'s V>)> for EdgeIterator<'s, K, V> {
     /**
     * Get the next iterator of the Edge.
@@ -486,8 +486,8 @@ impl<'s,
     }
 }
 
-impl<K: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+impl<K: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Edge<K, V> {
 
     /**
@@ -563,9 +563,9 @@ pub struct Graph<K, L, V> {
     directed:      bool
 }
 
-impl<K: ToStr + Ord + Eq + Clone,
-     L: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+impl<K: ToString + Ord + Eq + Clone,
+     L: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Graph<K, L, V> {
 
     /**
@@ -1114,9 +1114,9 @@ impl<K, L, V> Collection for Graph<K, L, V> {
     }
 }
 
-impl<K: ToStr + Ord + Eq + Clone,
-     L: ToStr + Ord + Eq + Clone,
-     V: ToStr + Ord + Eq + Clone>
+impl<K: ToString + Ord + Eq + Clone,
+     L: ToString + Ord + Eq + Clone,
+     V: ToString + Ord + Eq + Clone>
      Mutable for Graph<K, L, V> {
     /// Clear the Graph, removing all Vertices and edges
     fn clear(&mut self) {
@@ -1147,9 +1147,9 @@ mod GraphUtils {
         }
     }
 
-    pub fn remove_edge_to<K: ToStr + Ord + Eq + Clone,
-                          L: ToStr + Ord + Eq + Clone,
-                          V: ToStr + Ord + Eq + Clone>
+    pub fn remove_edge_to<K: ToString + Ord + Eq + Clone,
+                          L: ToString + Ord + Eq + Clone,
+                          V: ToString + Ord + Eq + Clone>
                           (vertex: &mut Option<Box<Vertex<K, L, V>>>, key: K) -> () {
         match *vertex {
             Some(ref mut v) => {
@@ -1205,9 +1205,9 @@ mod GraphUtils {
         }
     }
 
-    pub fn add_vertex<K: ToStr + Ord + Eq + Clone,
-                      L: ToStr + Ord + Eq + Clone,
-                      V: ToStr + Ord + Eq + Clone>
+    pub fn add_vertex<K: ToString + Ord + Eq + Clone,
+                      L: ToString + Ord + Eq + Clone,
+                      V: ToString + Ord + Eq + Clone>
                       (vertex: &mut Option<Box<Vertex<K, L, V>>>,
                       new_vertex: Box<Vertex<K, L, V>>) -> () {
         match *vertex {
